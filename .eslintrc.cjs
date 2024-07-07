@@ -39,4 +39,10 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  }
 };
