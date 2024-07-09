@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 interface SearchInputProps {
   searchText: string;
-  onSearch: (searchText: string) => void;
+  onSearch: (text: string, page: number) => void;
 }
 
 const SearchTop = ({ searchText, onSearch }: SearchInputProps) => {
@@ -13,7 +13,7 @@ const SearchTop = ({ searchText, onSearch }: SearchInputProps) => {
   };
 
   const handleSearch = () => {
-    onSearch(searchInput);
+    onSearch(searchInput, 1);
   };
 
   return (
