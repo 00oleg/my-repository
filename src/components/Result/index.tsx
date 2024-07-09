@@ -1,6 +1,7 @@
 import { useState } from 'react';
-
+import { Link } from 'react-router-dom';
 interface SearchResultItem {
+  uid: string;
   name: string;
   earthAnimal: string;
 }
@@ -8,9 +9,14 @@ interface SearchResultItem {
 interface SearchResultsProps {
   results: SearchResultItem[];
   loading: boolean;
+  pageNumber: number;
 }
 
-const SearchResults = ({ loading, results }: SearchResultsProps) => {
+const SearchResults = ({
+  loading,
+  results,
+  pageNumber,
+}: SearchResultsProps) => {
   const [hasError, setHasError] = useState(false);
 
   const handleHasError = () => {
@@ -41,8 +47,10 @@ const SearchResults = ({ loading, results }: SearchResultsProps) => {
         <ul>
           {results.map((result, index) => (
             <li key={index}>
-              <strong>{result.name}</strong> -
-              <span>Earth Animal: {result.earthAnimal ? 'Yes' : 'No'}</span>
+              <Link to={`/details?page=${pageNumber}&detail=${result.uid}`}>
+                <strong>{result.name}</strong> -
+                <span>Earth Animal: {result.earthAnimal ? 'Yes' : 'No'}</span>
+              </Link>
             </li>
           ))}
         </ul>

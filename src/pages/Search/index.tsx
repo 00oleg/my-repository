@@ -3,17 +3,18 @@ import { useSearchParams } from 'react-router-dom';
 import SearchTop from '../../components/Top';
 import SearchResults from '../../components/Result';
 import PaginationResults from '../../components/Pagination';
+import { Outlet } from 'react-router-dom';
+import useSearchQuery from '../../hooks/useSearchQuery';
 
 interface SearchResult {
+  uid: string;
   name: string;
   earthAnimal: string;
 }
 
 const SearchPage = () => {
   const [firstLoader, setFirstLoader] = useState<boolean>(true);
-  const [searchText, setSearchText] = useState<string>(
-    localStorage.getItem('searchText') || '',
-  );
+  const [searchText, setSearchText] = useSearchQuery('searchText', '');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,7 +54,6 @@ const SearchPage = () => {
 
   const handleSearch = (newSearchText: string) => {
     const clearSearchText = newSearchText.trim();
-    localStorage.setItem('searchText', clearSearchText);
 
     handleLoading(true);
 
@@ -82,11 +82,18 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
+    console.log(1, firstLoader);
+
     if (pageNumber !== 1) {
       const updatedSearchParams = new URLSearchParams();
       updatedSearchParams.set('page', '1');
       handleSearchParams(updatedSearchParams);
       handlePageNumber(1);
+
+      if (firstLoader) {
+        setFirstLoader(false);
+        handleSearch(searchText);
+      }
     } else {
       if (firstLoader) {
         setFirstLoader(false);
@@ -97,29 +104,43 @@ const SearchPage = () => {
   }, [searchText, perPage]);
 
   useEffect(() => {
+    console.log(2, firstLoader);
+
     if (!firstLoader) {
       handleSearch(searchText);
     }
   }, [pageNumber]);
 
   useEffect(() => {
+    console.log(3, firstLoader);
+
     if (!firstLoader) {
       handlePageNumber(Number(searchParams.get('page') || 1));
     }
   }, [searchParams]);
 
   return (
-    <div className="container-center">
-      <SearchTop searchText={searchText} onSearch={handleSearchText} />
-      <SearchResults loading={loading} results={results} />
-      {loading || !results.length ? null : (
-        <PaginationResults
+    <div className="search-page">
+      <div className="search-page__left">
+        <SearchTop searchText={searchText} onSearch={handleSearchText} />
+        <SearchResults
+          loading={loading}
+          results={results}
           pageNumber={pageNumber}
-          totalPages={totalPages}
-          perPage={perPage}
-          handlePerPage={handlePerPage}
         />
-      )}
+        {loading || !results.length ? null : (
+          <PaginationResults
+            pageNumber={pageNumber}
+            totalPages={totalPages}
+            perPage={perPage}
+            handlePerPage={handlePerPage}
+          />
+        )}
+      </div>
+
+      <div className="search-page__right">
+        <Outlet />
+      </div>
     </div>
   );
 };
