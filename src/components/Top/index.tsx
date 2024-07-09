@@ -1,40 +1,27 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
 interface SearchInputProps {
   searchText: string;
   onSearch: (searchText: string) => void;
 }
 
-interface SearchInputState {
-  searchText: string;
-}
+const SearchTop = ({ searchText, onSearch }: SearchInputProps) => {
+  const [searchInput, setSearchInput] = useState<string>(searchText);
 
-class SearchTop extends Component<SearchInputProps, SearchInputState> {
-  constructor(props: SearchInputProps) {
-    super(props);
-    this.state = { searchText: props.searchText };
-  }
-
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchText: event.target.value.trim() });
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value.trim());
   };
 
-  handleSearch = () => {
-    this.props.onSearch(this.state.searchText);
+  const handleSearch = () => {
+    onSearch(searchInput);
   };
 
-  render() {
-    return (
-      <div className="search-form">
-        <input
-          type="text"
-          value={this.state.searchText}
-          onChange={this.handleChange}
-        />
-        <button onClick={this.handleSearch}>Search</button>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="search-form">
+      <input type="text" value={searchInput} onChange={handleChange} />
+      <button onClick={handleSearch}>Search</button>
+    </div>
+  );
+};
 
 export default SearchTop;

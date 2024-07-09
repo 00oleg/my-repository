@@ -1,12 +1,8 @@
-import { Component } from 'react';
+import { useState } from 'react';
 
 interface SearchResultItem {
   name: string;
   earthAnimal: string;
-}
-
-interface SearchResultState {
-  hasError: boolean;
 }
 
 interface SearchResultsProps {
@@ -14,56 +10,47 @@ interface SearchResultsProps {
   loading: boolean;
 }
 
-class SearchResults extends Component<SearchResultsProps, SearchResultState> {
-  constructor(props: SearchResultsProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
+const SearchResults = ({ loading, results }: SearchResultsProps) => {
+  const [hasError, setHasError] = useState(false);
 
-  handleClick = () => {
-    this.setState({
-      hasError: true,
-    });
+  const handleHasError = () => {
+    setHasError(true);
   };
 
-  render() {
-    if (this.state.hasError) {
-      throw new Error('Error in event handler');
-    }
+  if (hasError) {
+    throw new Error('Error in event handler');
+  }
 
-    const { loading, results } = this.props;
-
-    if (loading) {
-      return (
-        <div className="search-result">
-          <div>Loading...</div>
-        </div>
-      );
-    }
-
+  if (loading) {
     return (
       <div className="search-result">
-        <h2>
-          Search Star Trek Animals
-          <button className="btn-error" onClick={this.handleClick}>
-            Get Error
-          </button>
-        </h2>
-        {results.length ? (
-          <ul>
-            {results.map((result, index) => (
-              <li key={index}>
-                <strong>{result.name}</strong> -
-                <span>Earth Animal: {result.earthAnimal ? 'Yes' : 'No'}</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="no-results">No results</div>
-        )}
+        <div>Loading...</div>
       </div>
     );
   }
-}
+
+  return (
+    <div className="search-result">
+      <h2>
+        Search Star Trek Animals
+        <button className="btn-error" onClick={handleHasError}>
+          Get Error
+        </button>
+      </h2>
+      {results.length ? (
+        <ul>
+          {results.map((result, index) => (
+            <li key={index}>
+              <strong>{result.name}</strong> -
+              <span>Earth Animal: {result.earthAnimal ? 'Yes' : 'No'}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="no-results">No results</div>
+      )}
+    </div>
+  );
+};
 
 export default SearchResults;

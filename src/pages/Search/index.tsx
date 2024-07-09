@@ -1,78 +1,67 @@
-import { Component } from 'react';
 import SearchTop from '../../components/Top';
 import SearchResults from '../../components/Result';
-
-interface SearchPageProps {
-  params: object;
-}
+import { useEffect, useState } from 'react';
+import useSearchQuery from '../../hooks/useSearchQuery';
 
 interface SearchResult {
   name: string;
   earthAnimal: string;
 }
+const SearchPage = () => {
+  const [searchText, setSearchText] = useSearchQuery('searchText', '');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-interface SearchPageState {
-  searchText: string;
-  results: SearchResult[];
-  loading: boolean;
-}
-
-class SearchPage extends Component<SearchPageProps, SearchPageState> {
-  constructor(props: SearchPageProps) {
-    super(props);
-    this.state = {
-      searchText: localStorage.getItem('searchText') || '',
-      results: [],
-      loading: false,
-    };
-  }
-
-  componentDidMount() {
-    this.handleSearch(this.state.searchText);
-  }
-
-  handleSearch = (newSearchText: string) => {
-    const clearSearchText = newSearchText.trim();
-    localStorage.setItem('searchText', clearSearchText);
-
-    this.setState({ loading: true });
-
-    fetch(
-      `https://stapi.co/api/v1/rest/animal/search?name=${clearSearchText}`,
-      {
-        method: 'POST',
-      },
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Response was not ok');
-        }
-
-        return response.json();
-      })
-      .then(({ animals }) => {
-        this.setState({
-          searchText: clearSearchText,
-          results: animals,
-          loading: false,
-        });
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        throw new Error(error);
-      });
+  const handleSearchText = (param: string) => {
+    setSearchText(param);
   };
 
-  render() {
-    const { searchText, results, loading } = this.state;
+  const handleLoading = (param: boolean) => {
+    setLoading(param);
+  };
 
-    return (
-      <>
-        <SearchTop searchText={searchText} onSearch={this.handleSearch} />
-        <SearchResults loading={loading} results={results} />
-      </>
-    );
-  }
-}
+  const handleResults = (param: []) => {
+    setResults(param);
+  };
+
+  useEffect(() => {
+    const handleSearch = (newSearchText: string) => {
+      const clearSearchText = newSearchText.trim();
+
+      handleLoading(true);
+
+      fetch(
+        `https://stapi.co/api/v1/rest/animal/search?name=${clearSearchText}`,
+        {
+          method: 'POST',
+        },
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Response was not ok');
+          }
+
+          return response.json();
+        })
+        .then(({ animals }) => {
+          handleResults(animals);
+          handleLoading(false);
+        })
+        .catch((error) => {
+          handleLoading(false);
+          throw new Error(error);
+        });
+    };
+
+    handleSearch(searchText);
+  }, [searchText]);
+
+  return (
+    <>
+      <SearchTop searchText={searchText} onSearch={handleSearchText} />
+      <SearchResults loading={loading} results={results} />
+    </>
+  );
+};
 
 export default SearchPage;
