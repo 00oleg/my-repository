@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Card from '../Card';
 interface SearchResultItem {
   uid: string;
   name: string;
@@ -44,16 +44,11 @@ const SearchResults = ({
         </button>
       </h2>
       {results.length ? (
-        <ul>
+        <div className="card-list">
           {results.map((result, index) => (
-            <li key={index}>
-              <Link to={`/details?page=${pageNumber}&detail=${result.uid}`}>
-                <strong>{result.name}</strong> -
-                <span>Earth Animal: {result.earthAnimal ? 'Yes' : 'No'}</span>
-              </Link>
-            </li>
+            <Card key={index} pageNumber={pageNumber} {...result} />
           ))}
-        </ul>
+        </div>
       ) : (
         <div className="no-results">No results</div>
       )}

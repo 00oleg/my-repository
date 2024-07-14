@@ -10,6 +10,13 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: "latest",
+    sourceType: "module",
+  },
   plugins: [
     'react-refresh',
     'react-compiler',
@@ -38,7 +45,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    "react-hooks/exhaustive-deps": 'off'
+    'react-hooks/exhaustive-deps': 'off',
   },
   settings: {
     react: {

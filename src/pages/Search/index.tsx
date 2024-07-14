@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import SearchTop from '../../components/Top';
-import SearchResults from '../../components/Result';
-import PaginationResults from '../../components/Pagination';
-import { Outlet } from 'react-router-dom';
 import useSearchQuery from '../../hooks/useSearchQuery';
+import Search from '../../components/Search';
 
 interface SearchResult {
   uid: string;
@@ -120,28 +117,18 @@ const SearchPage = () => {
   }, [searchParams]);
 
   return (
-    <div className="search-page">
-      <div className="search-page__left">
-        <SearchTop searchText={searchText} onSearch={handleSearchText} />
-        <SearchResults
-          loading={loading}
-          results={results}
-          pageNumber={pageNumber}
-        />
-        {loading || !results.length ? null : (
-          <PaginationResults
-            pageNumber={pageNumber}
-            totalPages={totalPages}
-            perPage={perPage}
-            handlePerPage={handlePerPage}
-          />
-        )}
-      </div>
-
-      <div className="search-page__right">
-        <Outlet />
-      </div>
-    </div>
+    <Search
+      {...{
+        searchText,
+        handleSearchText,
+        loading,
+        results,
+        pageNumber,
+        totalPages,
+        perPage,
+        handlePerPage,
+      }}
+    />
   );
 };
 
