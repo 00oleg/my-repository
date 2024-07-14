@@ -78,7 +78,7 @@ const DetailPage = () => {
   return (
     <>
       <div className="detail-page" data-testid="detail-page">
-        <button ref={buttonRef} onClick={onDismiss}>
+        <button ref={buttonRef} onClick={onDismiss} data-testid="close-button">
           Close
         </button>
 
