@@ -29,7 +29,7 @@ test('Card component should render the card data', () => {
   expect(earth).toBeInTheDocument();
 });
 
-describe('DetailPage', () => {
+describe('CardOpenDetail', () => {
   const mockFetch = jest.fn();
 
   beforeEach(() => {
@@ -84,7 +84,7 @@ describe('DetailPage', () => {
   });
 });
 
-describe('DetailPage', () => {
+describe('CardOpenDetailWithAPI', () => {
   const mockFetch = jest.fn();
 
   beforeEach(() => {
@@ -131,11 +131,13 @@ describe('DetailPage', () => {
       </BrowserRouter>,
     );
 
-    expect(global.fetch).toHaveBeenCalledWith(
-      'https://stapi.co/api/v1/rest/animal?uid=1',
-      {
-        method: 'GET',
-      },
-    );
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://stapi.co/api/v1/rest/animal?uid=1',
+        {
+          method: 'GET',
+        },
+      );
+    });
   });
 });

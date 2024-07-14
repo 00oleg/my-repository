@@ -35,3 +35,13 @@ test('CardList component should display a message if no cards are present', () =
   const noCardsMessage = getByText('No results');
   expect(noCardsMessage).toBeInTheDocument();
 });
+
+test('CardList component should display a loading', () => {
+  const { getByText } = render(
+    <MemoryRouter initialEntries={['/']}>
+      <SearchResults loading={true} results={[]} pageNumber={1} />
+    </MemoryRouter>,
+  );
+  const noCardsMessage = getByText('Loading...');
+  expect(noCardsMessage).toBeInTheDocument();
+});

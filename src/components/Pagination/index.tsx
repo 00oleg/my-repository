@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import getArryByNumber from '../../utils/getArryByNumber';
 
 interface PaginationResultsProps {
   pageNumber: number;
@@ -18,7 +17,7 @@ const PaginationResults = ({
     <div className="pagination-result">
       <div className="pagination-result__list">
         <div className="pagination-result__title">Page:</div>
-        {getArryByNumber(totalPages).map((el: number) => {
+        {[...Array(totalPages).keys()].map((el: number) => {
           return (
             <Link
               key={el}
@@ -33,7 +32,7 @@ const PaginationResults = ({
 
       <div className="pagination-result__list">
         <div className="pagination-result__title">Per Page:</div>
-        {getArryByNumber(3).map((el: number) => {
+        {[...Array(3).keys()].map((el: number) => {
           const page = (el + 1) * 10;
 
           return (

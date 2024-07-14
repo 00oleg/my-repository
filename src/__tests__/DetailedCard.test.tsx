@@ -7,7 +7,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import DetailPage from '../pages/Detail';
 
-describe('DetailPage', () => {
+describe('DetailedCard', () => {
   const mockFetch = jest.fn();
 
   beforeEach(() => {
@@ -35,7 +35,9 @@ describe('DetailPage', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Loading...')).toBeInTheDocument();
+    });
   });
 
   test('DetailedCard component correctly displays the detailed card data', async () => {
@@ -55,13 +57,13 @@ describe('DetailPage', () => {
     const { container } = render(
       <MemoryRouter initialEntries={['/details?page=1&detail=ANMA0000264633']}>
         <Routes>
+          <Route path="/" element={<div />} />
           <Route path="details" element={<DetailPage />} />
         </Routes>
       </MemoryRouter>,
     );
 
     expect(container.querySelector('.detail-page')).toBeInTheDocument();
-
     fireEvent.click(screen.getByTestId('close-button'));
 
     await waitFor(() => {
