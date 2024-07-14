@@ -79,8 +79,6 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
-    console.log(1, firstLoader);
-
     if (pageNumber !== 1) {
       const updatedSearchParams = new URLSearchParams();
       updatedSearchParams.set('page', '1');
@@ -101,16 +99,12 @@ const SearchPage = () => {
   }, [searchText, perPage]);
 
   useEffect(() => {
-    console.log(2, firstLoader);
-
     if (!firstLoader) {
       handleSearch(searchText);
     }
   }, [pageNumber]);
 
   useEffect(() => {
-    console.log(3, firstLoader);
-
     if (!firstLoader) {
       handlePageNumber(Number(searchParams.get('page') || 1));
     }
