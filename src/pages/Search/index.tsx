@@ -111,18 +111,20 @@ const SearchPage = () => {
   }, [searchParams]);
 
   return (
-    <Search
-      {...{
-        searchText,
-        handleSearchText,
-        loading,
-        results,
-        pageNumber,
-        totalPages,
-        perPage,
-        handlePerPage,
-      }}
-    />
+    <>
+      <Search
+        {...{
+          searchText,
+          handleSearchText,
+          loading,
+          results,
+          pageNumber,
+          totalPages,
+          perPage,
+          handlePerPage,
+        }}
+      />
+    </>
   );
 };
 

@@ -41,10 +41,6 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
     'react-compiler/react-compiler': 'error',
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
     'react-hooks/exhaustive-deps': 'off',
   },
   settings: {
