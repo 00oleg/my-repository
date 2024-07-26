@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useItemDetailQuery } from '../../services/api';
+import { DetailResult } from '../../types/SearchTypes';
 
 const names = {
   uid: 'UID',
@@ -11,28 +13,18 @@ const names = {
   feline: 'Feline',
 };
 
-interface DetailResult {
-  uid: string;
-  name: string;
-  earthAnimal: boolean;
-  earthInsect: boolean;
-  avian: boolean;
-  canine: boolean;
-  feline: boolean;
-}
-
 const DetailPage = () => {
   const [searchParams] = useSearchParams();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [detail, setDetail] = useState<DetailResult>({
-    uid: '',
-    name: '',
-    earthAnimal: false,
-    earthInsect: false,
-    avian: false,
-    canine: false,
-    feline: false,
-  });
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [detail, setDetail] = useState<DetailResult>({
+  //   uid: '',
+  //   name: '',
+  //   earthAnimal: false,
+  //   earthInsect: false,
+  //   avian: false,
+  //   canine: false,
+  //   feline: false,
+  // });
   const navigate = useNavigate();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -40,40 +32,47 @@ const DetailPage = () => {
     navigate(`/?page=${searchParams.get('page')}`);
   };
 
-  const handleLoading = (param: boolean) => {
-    setLoading(param);
-  };
+  // const handleLoading = (param: boolean) => {
+  //   setLoading(param);
+  // };
 
-  const handleResult = (param: DetailResult) => {
-    setDetail(param);
-  };
+  // const handleResult = (param: DetailResult) => {
+  //   setDetail(param);
+  // };
 
-  const handleDetail = (uid: string | null) => {
-    handleLoading(true);
+  const { data, error, isLoading } = useItemDetailQuery({
+    uid: searchParams.get('detail') || '',
+  });
 
-    fetch(`https://stapi.co/api/v1/rest/animal?uid=${uid}`, {
-      method: 'GET',
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Response was not ok');
-        }
+  // const handleDetail = (uid: string | null) => {
 
-        return response.json();
-      })
-      .then(({ animal }) => {
-        handleResult(animal);
-        handleLoading(false);
-      })
-      .catch((error) => {
-        handleLoading(false);
-        throw new Error(error);
-      });
-  };
+  // }
 
-  useEffect(() => {
-    handleDetail(searchParams.get('detail'));
-  }, []);
+  // const handleDetail = (uid: string | null) => {
+  //   handleLoading(true);
+
+  //   fetch(`https://stapi.co/api/v1/rest/animal?uid=${uid}`, {
+  //     method: 'GET',
+  //   })
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error('Response was not ok');
+  //       }
+
+  //       return response.json();
+  //     })
+  //     .then(({ animal }) => {
+  //       handleResult(animal);
+  //       handleLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       throw new Error(error);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   handleDetail(searchParams.get('detail'));
+  // }, []);
 
   return (
     <>
@@ -83,13 +82,13 @@ const DetailPage = () => {
         </button>
 
         <h2>Animal detail:</h2>
-        {loading ? (
+        {isLoading || error ? (
           <div>Loading...</div>
         ) : (
           <table>
             <tbody>
-              {Object.keys(detail).map((el: string) => {
-                let val = detail[el as keyof DetailResult];
+              {Object.keys(data?.animal || {}).map((el: string) => {
+                let val = data?.animal[el as keyof DetailResult];
 
                 if (typeof val === 'boolean') {
                   val = val ? 'Yes' : 'No';
