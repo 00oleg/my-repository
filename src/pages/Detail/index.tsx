@@ -15,16 +15,6 @@ const names = {
 
 const DetailPage = () => {
   const [searchParams] = useSearchParams();
-  // const [loading, setLoading] = useState<boolean>(false);
-  // const [detail, setDetail] = useState<DetailResult>({
-  //   uid: '',
-  //   name: '',
-  //   earthAnimal: false,
-  //   earthInsect: false,
-  //   avian: false,
-  //   canine: false,
-  //   feline: false,
-  // });
   const navigate = useNavigate();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -32,47 +22,9 @@ const DetailPage = () => {
     navigate(`/?page=${searchParams.get('page')}`);
   };
 
-  // const handleLoading = (param: boolean) => {
-  //   setLoading(param);
-  // };
-
-  // const handleResult = (param: DetailResult) => {
-  //   setDetail(param);
-  // };
-
   const { data, error, isLoading } = useItemDetailQuery({
     uid: searchParams.get('detail') || '',
   });
-
-  // const handleDetail = (uid: string | null) => {
-
-  // }
-
-  // const handleDetail = (uid: string | null) => {
-  //   handleLoading(true);
-
-  //   fetch(`https://stapi.co/api/v1/rest/animal?uid=${uid}`, {
-  //     method: 'GET',
-  //   })
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error('Response was not ok');
-  //       }
-
-  //       return response.json();
-  //     })
-  //     .then(({ animal }) => {
-  //       handleResult(animal);
-  //       handleLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       throw new Error(error);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   handleDetail(searchParams.get('detail'));
-  // }, []);
 
   return (
     <>

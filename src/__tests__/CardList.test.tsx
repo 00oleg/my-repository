@@ -6,19 +6,30 @@ import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import SearchResults from '../components/Result';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+import { itemReducer } from '../store/itemReducer';
+
+const store = configureStore({
+  reducer: {
+    items: itemReducer,
+  },
+});
 
 test('CardList component should render the correct number of cards', () => {
   const { getAllByTestId } = render(
     <MemoryRouter initialEntries={['/']}>
-      <SearchResults
-        loading={false}
-        results={[
-          { uid: '1', name: 'Animal 1', earthAnimal: 'true' },
-          { uid: '2', name: 'Animal 2', earthAnimal: 'false' },
-          { uid: '3', name: 'Animal 3', earthAnimal: 'false' },
-        ]}
-        pageNumber={1}
-      />
+      <Provider store={store}>
+        <SearchResults
+          loading={false}
+          results={[
+            { uid: '1', name: 'Animal 1', earthAnimal: 'true' },
+            { uid: '2', name: 'Animal 2', earthAnimal: 'false' },
+            { uid: '3', name: 'Animal 3', earthAnimal: 'false' },
+          ]}
+          pageNumber={1}
+        />
+      </Provider>
     </MemoryRouter>,
   );
 
