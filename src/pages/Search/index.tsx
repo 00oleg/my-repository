@@ -2,17 +2,12 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useSearchQuery from '../../hooks/useSearchQuery';
 import Search from '../../components/Search';
-
-interface SearchResult {
-  uid: string;
-  name: string;
-  earthAnimal: string;
-}
+import { SearchResultItem } from '../../types/SearchTypes';
 
 const SearchPage = () => {
   const [firstLoader, setFirstLoader] = useState<boolean>(true);
   const [searchText, setSearchText] = useSearchQuery('searchText', '');
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [pageNumber, setPageNumber] = useState<number>(

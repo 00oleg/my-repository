@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import Card from '../Card';
-interface SearchResultItem {
-  uid: string;
-  name: string;
-  earthAnimal: string;
-}
+import { SearchResultItem } from '../../types/SearchTypes';
 
 interface SearchResultsProps {
   results: SearchResultItem[];

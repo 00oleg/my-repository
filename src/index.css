@@ -67,6 +67,10 @@ button:focus-visible {
   background-color: #f66161;
 }
 
+.btn-success {
+  background-color: #2ba241;
+}
+
 input[type='text'] {
   height: 40px;
   padding: 0 10px;
@@ -177,6 +181,13 @@ input[type='text'] {
 .search-page__right,
 .search-page__left {
   width: 50%;
+}
+
+.search-result-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 15px;
 }
 
 .detail-page {

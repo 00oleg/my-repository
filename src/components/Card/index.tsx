@@ -2,19 +2,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { toggleItem } from '../../store/itemReducer';
-
-interface SearchResultItem {
-  uid: string;
-  name: string;
-  earthAnimal: string;
-  pageNumber: number;
-}
+import { SearchResultItem } from '../../types/SearchTypes';
 
 const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
   const itemsFromStore = useSelector((state: RootState) => state.items.values);
   const dispatch = useDispatch();
 
-  const handleCheckboxChange = (value: string) => {
+  const handleCheckboxChange = (value: SearchResultItem) => {
     dispatch(toggleItem(value));
   };
 
@@ -23,8 +17,8 @@ const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
       <input
         type="checkbox"
         value={uid}
-        onChange={() => handleCheckboxChange(uid)}
-        checked={itemsFromStore.includes(uid)}
+        onChange={() => handleCheckboxChange({ uid, name, earthAnimal })}
+        checked={!!itemsFromStore[uid]}
       />
       <Link
         className="card-list__item-link"

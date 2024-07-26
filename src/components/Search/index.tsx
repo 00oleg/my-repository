@@ -2,12 +2,8 @@ import SearchTop from '../../components/Top';
 import SearchResults from '../../components/Result';
 import PaginationResults from '../../components/Pagination';
 import { Outlet } from 'react-router-dom';
-
-interface SearchResultItem {
-  uid: string;
-  name: string;
-  earthAnimal: string;
-}
+import { SearchResultItem } from '../../types/SearchTypes';
+import ResultActions from '../ResultActions';
 
 interface SearchProps {
   searchText: string;
@@ -47,6 +43,8 @@ const Search = ({
             handlePerPage={handlePerPage}
           />
         )}
+
+        <ResultActions />
       </div>
 
       <div className="search-page__right">

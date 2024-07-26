@@ -1,30 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { SearchResultItem } from '../types/SearchTypes';
 
-export interface ItemState {
-  values: string[];
-}
-
-const initialState: ItemState = {
-  values: [],
+const initialState: { values: Record<string, SearchResultItem> } = {
+  values: {},
 };
 
 const itemSlice = createSlice({
   name: 'items',
   initialState,
   reducers: {
-    toggleItem: (state, action: PayloadAction<string>) => {
+    toggleItem: (state, action: PayloadAction<SearchResultItem>) => {
       const el = action.payload;
 
-      if (state.values.includes(el)) {
-        const index = state.values.indexOf(el);
-        state.values.splice(index, 1);
+      if (state.values[el.uid]) {
+        delete state.values[el.uid];
       } else {
-        state.values.push(el);
+        state.values[el.uid] = { ...el };
       }
+    },
+    removeItems: (state) => {
+      state.values = {};
     },
   },
 });
 
-export const { toggleItem } = itemSlice.actions;
+export const { toggleItem, removeItems } = itemSlice.actions;
 export const itemReducer = itemSlice.reducer;
