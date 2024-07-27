@@ -44,6 +44,39 @@ h1 {
   line-height: 1.1;
 }
 
+input[type=checkbox] {
+  align-content: center;
+  appearance: none;
+  background-color: #fff;
+  border: 1px solid #9e9e9e;
+  border-radius: 0;
+  cursor: pointer;
+  display: grid;
+  height: 16px;
+  justify-content: center;
+  margin-top: .5px;
+  min-width: 16px;
+  place-content: center;
+  position: relative;
+  width: 16px
+}
+
+input[type=checkbox]:before {
+  box-shadow: inset 8px 8px #646cff;
+  content: "";
+  height: 8px;
+  transform: scale(0);
+  width: 8px
+}
+
+input[type=checkbox]:checked {
+  border-color: #646cff!important
+}
+
+input[type=checkbox]:checked:before {
+  transform: scale(1)!important
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -128,6 +161,9 @@ input[type='text'] {
 }
 
 .card-list__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 10px 0;
   border-top: 1px solid #ddd;
 }
