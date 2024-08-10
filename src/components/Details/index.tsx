@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useItemDetailQuery } from '../../services/api';
 import { DetailResult } from '../../types/SearchTypes';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 const names = {
   uid: 'UID',
@@ -14,16 +14,22 @@ const names = {
 };
 
 const DetailPage = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const pathname = usePathname();
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const currentSearchTerm = String(searchParams.get('searchTerm')) || '';
+  const currentPage = Number(searchParams.get('page'));
+  const currentPerPage = Number(searchParams.get('per_page'));
 
   const onDismiss = () => {
-    navigate(`/?page=${searchParams.get('page')}`);
+    replace(
+      `${pathname}/?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}`,
+    );
   };
 
   const { data, error, isLoading } = useItemDetailQuery({
-    uid: searchParams.get('detail') || '',
+    uid: searchParams.get('details') || '',
   });
 
   return (

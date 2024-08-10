@@ -5,10 +5,8 @@ interface SearchInputProps {
   onSearch: (text: string, page: number) => void;
 }
 
-const SearchTop = ({ searchText, onSearch }: SearchInputProps) => {
-  const [searchInput, setSearchInput] = useState<string>(
-    searchText || String(localStorage.getItem('searchText')),
-  );
+const SearchTop = ({ searchText = '', onSearch }: SearchInputProps) => {
+  const [searchInput, setSearchInput] = useState<string>(searchText || '');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value.trim());

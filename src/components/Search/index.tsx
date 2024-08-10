@@ -1,9 +1,10 @@
 import SearchTop from '../../components/Top';
 import SearchResults from '../../components/Result';
 import PaginationResults from '../../components/Pagination';
-import { Outlet } from 'react-router-dom';
 import { SearchResultItem } from '../../types/SearchTypes';
 import ResultActions from '../ResultActions';
+import { useSearchParams } from 'next/navigation';
+import DetailPage from '../Details';
 
 interface SearchProps {
   searchText: string;
@@ -13,19 +14,20 @@ interface SearchProps {
   pageNumber: number;
   totalPages: number;
   perPage: number;
-  handlePerPage: (page: number) => void;
 }
 
 const Search = ({
-  searchText,
+  searchText = '',
   handleSearchText,
   loading,
   results,
   pageNumber,
   totalPages,
   perPage,
-  handlePerPage,
 }: SearchProps) => {
+  const searchParams = useSearchParams();
+  const currentDetails = searchParams.get('details');
+
   return (
     <div className="search-page">
       <div className="search-page__left">
@@ -40,7 +42,7 @@ const Search = ({
             pageNumber={pageNumber}
             totalPages={totalPages}
             perPage={perPage}
-            handlePerPage={handlePerPage}
+            searchText={searchText}
           />
         )}
 
@@ -48,7 +50,7 @@ const Search = ({
       </div>
 
       <div className="search-page__right">
-        <Outlet />
+        {currentDetails ? <DetailPage /> : null}
       </div>
     </div>
   );

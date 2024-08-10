@@ -3,7 +3,6 @@
  */
 
 import '@testing-library/jest-dom';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { fireEvent, render } from '@testing-library/react';
 import PaginationResults from '../components/Pagination';
 
@@ -24,7 +23,7 @@ test('Pagination component updates URL query parameter when page changes', () =>
                 pageNumber={1}
                 totalPages={10}
                 perPage={10}
-                handlePerPage={() => {}}
+                searchText={''}
               />
               <LocationDisplay />
             </>

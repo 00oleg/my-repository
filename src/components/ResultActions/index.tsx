@@ -1,7 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { removeItems } from '../../store/itemReducer';
 import { SearchResultItem } from '../../types/SearchTypes';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 
 const convertToCSV = (items: Record<string, SearchResultItem>) => {
   const rows = Object.keys(items).map((key) => {
@@ -15,8 +15,8 @@ const convertToCSV = (items: Record<string, SearchResultItem>) => {
 };
 
 const ResultActions = () => {
-  const dispatch = useDispatch();
-  const checkedItems = useSelector((state: RootState) => state.items.values);
+  const dispatch = useAppDispatch();
+  const checkedItems = useAppSelector((state: RootState) => state.items.values);
   const checkedItemsKeys = Object.keys(checkedItems);
   const checkedItemsTotal = checkedItemsKeys.length;
 

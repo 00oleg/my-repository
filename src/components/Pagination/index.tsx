@@ -1,28 +1,32 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 interface PaginationResultsProps {
   pageNumber: number;
   totalPages: number;
   perPage: number;
-  handlePerPage: (page: number) => void;
+  searchText: string;
 }
+
+const getArray = (number: number) => {
+  return [...Array(number).keys()];
+};
 
 const PaginationResults = ({
   pageNumber,
   totalPages,
   perPage,
-  handlePerPage,
+  searchText,
 }: PaginationResultsProps) => {
   return (
     <div className="pagination-result">
       <div className="pagination-result__list">
         <div className="pagination-result__title">Page:</div>
-        {[...Array(totalPages).keys()].map((el: number) => {
+        {getArray(totalPages).map((el: number) => {
           return (
             <Link
               key={el}
               className={`pagination-result__item${pageNumber - 1 === el ? ' current' : ''}`}
-              to={`?page=${el + 1}`}
+              href={`?searchTerm=${searchText}&page=${el + 1}&per_page=${perPage}`}
             >
               {el + 1}
             </Link>
@@ -32,17 +36,17 @@ const PaginationResults = ({
 
       <div className="pagination-result__list">
         <div className="pagination-result__title">Per Page:</div>
-        {[...Array(3).keys()].map((el: number) => {
-          const page = (el + 1) * 10;
+        {[1, 2, 3].map((el: number) => {
+          const per_page = (el + 1) * 10;
 
           return (
-            <div
+            <Link
               key={el}
-              className={`pagination-result__item${page === perPage ? ' current' : ''}`}
-              onClick={() => handlePerPage(page)}
+              className={`pagination-result__item${perPage === per_page ? ' current' : ''}`}
+              href={`?searchTerm=${searchText}&page=${pageNumber}&per_page=${per_page}`}
             >
-              {page}
-            </div>
+              {per_page}
+            </Link>
           );
         })}
       </div>

@@ -3,9 +3,8 @@
  */
 
 import '@testing-library/jest-dom';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import DetailPage from '../pages/Detail';
+import DetailPage from '../pages/details';
 import { Provider } from 'react-redux';
 import { store } from '../store/store';
 

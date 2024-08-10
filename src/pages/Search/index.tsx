@@ -1,81 +1,82 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import useSearchQuery from '../../hooks/useSearchQuery';
 import Search from '../../components/Search';
-import { useSearchItemsQuery } from '../../services/api';
+import itemApi, {
+  itemDetail,
+  searchItems,
+  useSearchItemsQuery,
+} from '../../services/api';
+import { useRouter } from 'next/router';
+import { InferGetServerSidePropsType } from 'next';
+import { wrapper } from 'src/store/store';
 
-const SearchPage = () => {
-  const [firstLoader, setFirstLoader] = useState<boolean>(true);
-  const [searchText, setSearchText] = useSearchQuery('searchText', '');
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [pageNumber, setPageNumber] = useState<number>(
-    Number(searchParams.get('page') || 1),
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ query }) => {
+      const { page, per_page, details, searchTerm } = query;
+
+      const currentSearchTerm = searchTerm ? String(searchTerm) : '';
+      const currentPage = Number(page) || 1;
+      const currentPerPage = Number(per_page) || 10;
+      const currentDetails = String(details) || '';
+
+      await store.dispatch(
+        searchItems.initiate({
+          searchText: currentSearchTerm,
+          pageNumber: currentPage,
+          perPage: currentPerPage,
+        }),
+      );
+
+      if (details) {
+        await store.dispatch(
+          itemDetail.initiate({
+            uid: currentDetails,
+          }),
+        );
+      }
+
+      await Promise.all(store.dispatch(itemApi.util.getRunningQueriesThunk()));
+
+      return {
+        props: {
+          searchTerm: currentSearchTerm,
+          perPage: currentPerPage,
+          page: currentPage,
+          initialState: store.getState(),
+        },
+      };
+    },
+);
+
+export default function Page({
+  page,
+  perPage,
+  searchTerm,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const currentSearchTerm = searchTerm ? String(searchTerm) : '';
+  const router = useRouter();
+  const [searchText, setSearchText] = useSearchQuery(
+    'searchText',
+    currentSearchTerm,
   );
-  const [perPage, setPerPage] = useState<number>(10);
-
-  const handleSearchParams = (param: URLSearchParams) => {
-    setSearchParams(param);
-  };
 
   const handleSearchText = (param: string) => {
     setSearchText(param);
-  };
-
-  const handlePageNumber = (param: number) => {
-    setPageNumber(param);
-  };
-
-  const handlePerPage = (param: number) => {
-    setPerPage(param);
+    router.push({
+      pathname: '/search',
+      query: {
+        searchTerm: param,
+        page: 1,
+        perPage: perPage.toString(),
+      },
+    });
   };
 
   const { data, error, isLoading } = useSearchItemsQuery({
     searchText,
-    pageNumber,
+    pageNumber: Number(page),
     perPage,
   });
-
-  const handleSearch = (newSearchText: string) => {
-    const clearSearchText = newSearchText.trim();
-    setSearchText(clearSearchText);
-    setSearchParams({
-      searchTerm: clearSearchText,
-      page: pageNumber.toString(),
-      perPage: perPage.toString(),
-    });
-  };
-
-  useEffect(() => {
-    if (pageNumber !== 1) {
-      const updatedSearchParams = new URLSearchParams();
-      updatedSearchParams.set('page', '1');
-      handleSearchParams(updatedSearchParams);
-      handlePageNumber(1);
-
-      if (firstLoader) {
-        setFirstLoader(false);
-        handleSearch(searchText);
-      }
-    } else {
-      if (firstLoader) {
-        setFirstLoader(false);
-      }
-
-      handleSearch(searchText);
-    }
-  }, [searchText, perPage]);
-
-  useEffect(() => {
-    if (!firstLoader) {
-      handleSearch(searchText);
-    }
-  }, [pageNumber]);
-
-  useEffect(() => {
-    if (!firstLoader) {
-      handlePageNumber(Number(searchParams.get('page') || 1));
-    }
-  }, [searchParams]);
 
   if (error) {
     return <div>Error loading item</div>;
@@ -92,11 +93,8 @@ const SearchPage = () => {
           pageNumber: data?.page.pageNumber || 0,
           totalPages: data?.page.totalPages || 0,
           perPage,
-          handlePerPage,
         }}
       />
     </>
   );
-};
-
-export default SearchPage;
+}

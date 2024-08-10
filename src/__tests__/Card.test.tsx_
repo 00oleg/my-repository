@@ -3,20 +3,13 @@
  */
 
 import '@testing-library/jest-dom';
-import {
-  BrowserRouter,
-  MemoryRouter,
-  Outlet,
-  Route,
-  Routes,
-} from 'react-router-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import Card from '../components/Card';
-import DetailPage from '../pages/Detail';
+import Card from '../components/Card/index.tsx';
+import DetailPage from '../pages/details/index.tsx';
 import { Provider } from 'react-redux';
 import { store } from '../store/store.ts';
-import { itemReducer, removeItems, toggleItem } from '../store/itemReducer';
-import { SearchResultItem } from '../types/SearchTypes';
+import { itemReducer, removeItems, toggleItem } from '../store/itemReducer.ts';
+import { SearchResultItem } from '../types/SearchTypes.ts';
 
 test('Card component should render the card data', () => {
   const { getByText } = render(

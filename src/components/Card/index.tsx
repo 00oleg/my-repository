@@ -1,12 +1,19 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { toggleItem } from '../../store/itemReducer';
 import { SearchResultItem } from '../../types/SearchTypes';
+import Link from 'next/link';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { useSearchParams } from 'next/navigation';
 
-const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
-  const itemsFromStore = useSelector((state: RootState) => state.items.values);
-  const dispatch = useDispatch();
+const Card = ({ uid, name, earthAnimal }: SearchResultItem) => {
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const currentPerPage = Number(searchParams.get('per_page')) || 10;
+  const currentSearchTerm = String(searchParams.get('searchTerm')) || '';
+  const itemsFromStore = useAppSelector(
+    (state: RootState) => state.items.values,
+  );
+  const dispatch = useAppDispatch();
 
   const handleCheckboxChange = (value: SearchResultItem) => {
     dispatch(toggleItem(value));
@@ -22,7 +29,7 @@ const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
       />
       <Link
         className="card-list__item-link"
-        to={`/details?page=${pageNumber}&detail=${uid}`}
+        href={`/search?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}&details=${uid}`}
         data-testid="card-list__item-link"
       >
         <strong>{name}</strong> -
