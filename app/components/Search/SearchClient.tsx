@@ -1,10 +1,13 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
 import { useSearchItemsQuery } from '../../services/api';
 import useSearchQuery from '../../hooks/useSearchQuery';
 import Search from '../../components/Search';
-import { ItemDetailFullResponse, SearchFullResponse } from 'src/types/ApiTypes';
+import {
+  ItemDetailFullResponse,
+  SearchFullResponse,
+} from '../../types/ApiTypes';
+import { useNavigate } from '@remix-run/react';
 
 interface SearchPageClientProps {
   initialData: SearchFullResponse | undefined;
@@ -23,9 +26,8 @@ const SearchClientPage = ({
   page,
   perPage,
 }: SearchPageClientProps) => {
+  const navigate = useNavigate();
   const currentSearchTerm = keywords ? String(keywords) : '';
-  const { replace } = useRouter();
-  const pathname = usePathname();
   const [searchText, setSearchText] = useSearchQuery(
     'searchText',
     currentSearchTerm,
@@ -33,7 +35,7 @@ const SearchClientPage = ({
 
   const handleSearchText = (param: string) => {
     setSearchText(param);
-    replace(`${pathname}/?searchTerm=${param}&page=1&per_page=${perPage}`);
+    navigate(`/search?searchTerm=${param}&page=1&per_page=${perPage}`);
   };
 
   const { data, error, isLoading } = useSearchItemsQuery(

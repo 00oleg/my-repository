@@ -6,6 +6,10 @@ import '@testing-library/jest-dom';
 import { fireEvent, render } from '@testing-library/react';
 import PaginationResults from '../components/Pagination';
 
+jest.mock('@remix-run/react', () => ({
+  Link: ({ to, children }) => <a href={to}>{children}</a>,
+}));
+
 test('Pagination component updates URL query parameter when page changes', () => {
   const { getByText } = render(
     <PaginationResults

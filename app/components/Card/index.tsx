@@ -1,8 +1,8 @@
 import { RootState } from '../../store/store';
 import { toggleItem } from '../../store/itemReducer';
 import { SearchResultItem } from '../../types/SearchTypes';
-import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from '@remix-run/react';
 
 const Card = ({ queryParams, uid, name, earthAnimal }: SearchResultItem) => {
   const { page, perPage, keywords } = queryParams;
@@ -25,7 +25,7 @@ const Card = ({ queryParams, uid, name, earthAnimal }: SearchResultItem) => {
       />
       <Link
         className="card-list__item-link"
-        href={`/search?searchTerm=${keywords}&page=${page}&per_page=${perPage}&details=${uid}`}
+        to={`/search?searchTerm=${keywords}&page=${page}&per_page=${perPage}&details=${uid}`}
         data-testid="card-list__item-link"
       >
         <strong>{name}</strong> -

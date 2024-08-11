@@ -11,11 +11,11 @@ import Search from '../components/Search';
 import { itemReducer, removeItems, toggleItem } from '../store/itemReducer';
 import { SearchResultItem } from '../types/SearchTypes';
 import { useItemDetailQuery } from '../services/api';
-import { useRouter, usePathname } from 'next/navigation';
+import { useNavigate } from '@remix-run/react';
 
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
-  usePathname: jest.fn(),
+jest.mock('@remix-run/react', () => ({
+  Link: ({ to, children }) => <a href={to}>{children}</a>,
+  useNavigate: jest.fn(),
 }));
 
 jest.mock('../services/api', () => ({
@@ -70,18 +70,14 @@ describe('CardOpenDetail', () => {
   });
 
   test('Clicking on a card opens a detailed card component', async () => {
+    const mockNavigate = jest.fn();
     (useItemDetailQuery as jest.Mock).mockReturnValue({
       data: null,
       error: null,
       isLoading: true,
     });
 
-    (useRouter as jest.Mock).mockReturnValue({
-      query: { page: '1' },
-      push: jest.fn(),
-    });
-
-    (usePathname as jest.Mock).mockReturnValue(() => '/search');
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
 
     const { container } = render(
       <Provider store={store}>
@@ -127,6 +123,8 @@ describe('CardOpenDetailWithAPI', () => {
   });
 
   test('Clicking on a card opens a detailed card component and triggers an API call', async () => {
+    const mockNavigate = jest.fn();
+
     (useItemDetailQuery as jest.Mock).mockReturnValue({
       data: {
         animal: {
@@ -139,12 +137,7 @@ describe('CardOpenDetailWithAPI', () => {
       isLoading: false,
     });
 
-    (useRouter as jest.Mock).mockReturnValue({
-      query: { page: '1' },
-      push: jest.fn(),
-    });
-
-    (usePathname as jest.Mock).mockReturnValue(() => '/search');
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
 
     const { container } = render(
       <Provider store={store}>

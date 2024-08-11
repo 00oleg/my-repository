@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@remix-run/react';
 
 interface PaginationResultsProps {
   pageNumber: number;
@@ -26,7 +26,7 @@ const PaginationResults = ({
             <Link
               key={el}
               className={`pagination-result__item${pageNumber - 1 === el ? ' current' : ''}`}
-              href={`?searchTerm=${searchText}&page=${el + 1}&per_page=${perPage}`}
+              to={`?searchTerm=${searchText}&page=${el + 1}&per_page=${perPage}`}
             >
               {el + 1}
             </Link>
@@ -43,7 +43,7 @@ const PaginationResults = ({
             <Link
               key={el}
               className={`pagination-result__item${perPage === per_page ? ' current' : ''}`}
-              href={`?searchTerm=${searchText}&page=${pageNumber}&per_page=${per_page}`}
+              to={`?searchTerm=${searchText}&page=${pageNumber}&per_page=${per_page}`}
             >
               {per_page}
             </Link>

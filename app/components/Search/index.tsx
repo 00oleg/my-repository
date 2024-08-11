@@ -4,7 +4,7 @@ import PaginationResults from '../../components/Pagination';
 import { queryParams, SearchResultItem } from '../../types/SearchTypes';
 import ResultActions from '../ResultActions';
 import DetailPage from '../Details';
-import { ItemDetailFullResponse } from 'src/types/ApiTypes';
+import { ItemDetailFullResponse } from '../../types/ApiTypes';
 
 interface SearchProps {
   initialDetailData: ItemDetailFullResponse | undefined;

@@ -8,6 +8,11 @@ import SearchResults from '../components/Result';
 import { Provider } from 'react-redux';
 import { createMockStore } from '../store/mockStore';
 
+jest.mock('@remix-run/react', () => ({
+  Link: ({ to, children }) => <a href={to}>{children}</a>,
+  useNavigate: jest.fn(),
+}));
+
 describe('CardList Component', () => {
   let store: ReturnType<typeof createMockStore>;
 

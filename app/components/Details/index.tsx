@@ -1,8 +1,8 @@
 import { useRef } from 'react';
 import { useItemDetailQuery } from '../../services/api';
 import { DetailResult, queryParams } from '../../types/SearchTypes';
-import { usePathname, useRouter } from 'next/navigation';
-import { ItemDetailFullResponse } from 'src/types/ApiTypes';
+import { ItemDetailFullResponse } from '../../types/ApiTypes';
+import { useNavigate } from '@remix-run/react';
 
 const names = {
   uid: 'UID',
@@ -21,15 +21,12 @@ const DetailPage = ({
   queryParams: queryParams;
   initialDetailData: ItemDetailFullResponse | undefined;
 }) => {
-  const { replace } = useRouter();
-  const pathname = usePathname();
+  const navigate = useNavigate();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { page, perPage, keywords, details } = queryParams;
 
   const onDismiss = () => {
-    replace(
-      `${pathname}/?searchTerm=${keywords}&page=${page}&per_page=${perPage}`,
-    );
+    navigate(`/search?searchTerm=${keywords}&page=${page}&per_page=${perPage}`);
   };
 
   const { data, error, isLoading } = useItemDetailQuery(

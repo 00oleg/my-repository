@@ -9,8 +9,8 @@ import Search from '../components/Search';
 import { Provider } from 'react-redux';
 import { createMockStore } from '../store/mockStore';
 import { useItemDetailQuery, useSearchItemsQuery } from '../services/api';
-import { useRouter, usePathname } from 'next/navigation';
 import SearchClientPage from '../components/Search/SearchClient';
+import { useNavigate } from '@remix-run/react';
 
 beforeEach(() => {
   localStorage.clear();
@@ -18,9 +18,9 @@ beforeEach(() => {
 
 global.URL.createObjectURL = jest.fn(() => 'mocked-url');
 
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
-  usePathname: jest.fn(),
+jest.mock('@remix-run/react', () => ({
+  Link: ({ to, children }) => <a href={to}>{children}</a>,
+  useNavigate: jest.fn(),
 }));
 
 jest.mock('../services/api', () => ({
@@ -110,6 +110,7 @@ describe('Search Page Component', () => {
   });
 
   test('Component search page have keywords text', () => {
+    const mockNavigate = jest.fn();
     (useItemDetailQuery as jest.Mock).mockReturnValue({
       data: null,
       error: null,
@@ -122,12 +123,7 @@ describe('Search Page Component', () => {
       isLoading: true,
     });
 
-    (useRouter as jest.Mock).mockReturnValue({
-      query: { page: '1' },
-      push: jest.fn(),
-    });
-
-    (usePathname as jest.Mock).mockReturnValue(() => '/search');
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
 
     const { getByTestId } = render(
       <Provider store={store}>

@@ -8,11 +8,11 @@ import DetailPage from '../components/Details';
 import { Provider } from 'react-redux';
 import { createMockStore } from '../store/mockStore';
 import { useItemDetailQuery } from '../services/api';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from '@remix-run/react';
 
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
-  usePathname: jest.fn(),
+jest.mock('@remix-run/react', () => ({
+  Link: ({ to, children }) => <a href={to}>{children}</a>,
+  useNavigate: jest.fn(),
 }));
 
 jest.mock('../services/api', () => ({
@@ -31,6 +31,8 @@ describe('DetailedCard', () => {
   });
 
   test('DetailedCard component a loading indicator is displayed while fetching data', async () => {
+    const mockNavigate = jest.fn();
+
     (useItemDetailQuery as jest.Mock).mockReturnValue({
       data: {
         animal: {
@@ -47,10 +49,7 @@ describe('DetailedCard', () => {
       isLoading: true,
     });
 
-    (useRouter as jest.Mock).mockReturnValue({
-      query: { page: '1' },
-      push: jest.fn(),
-    });
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
 
     render(
       <Provider store={store}>
@@ -82,6 +81,8 @@ describe('DetailedCard', () => {
   });
 
   test('DetailedCard component correctly displays the detailed card data', async () => {
+    const mockNavigate = jest.fn();
+
     (useItemDetailQuery as jest.Mock).mockReturnValue({
       data: {
         animal: {
@@ -98,10 +99,7 @@ describe('DetailedCard', () => {
       isLoading: false,
     });
 
-    (useRouter as jest.Mock).mockReturnValue({
-      query: { page: '1' },
-      push: jest.fn(),
-    });
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
 
     const { getByText } = render(
       <Provider store={store}>
@@ -134,12 +132,9 @@ describe('DetailedCard', () => {
   });
 
   test('DetailedCard component clicking the close button hides the component', async () => {
-    const mockReplace = jest.fn();
+    const mockNavigate = jest.fn();
 
-    (useRouter as jest.Mock).mockReturnValue({
-      query: { page: '1' },
-      replace: mockReplace,
-    });
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
 
     const { container } = render(
       <Provider store={store}>
@@ -167,8 +162,8 @@ describe('DetailedCard', () => {
 
     expect(container.querySelector('.detail-page')).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('close-button'));
-    expect(mockReplace).toHaveBeenCalledWith(
-      'undefined/?searchTerm=&page=1&per_page=10',
+    expect(mockNavigate).toHaveBeenCalledWith(
+      '/search?searchTerm=&page=1&per_page=10',
     );
   });
 });
