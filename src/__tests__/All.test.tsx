@@ -3,7 +3,7 @@
  */
 
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import MainPage from '../pages';
 import ErrorPage404 from '../pages/404';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -14,31 +14,44 @@ test('404 page have text', () => {
   expect(getByTestId('not-found')).toHaveTextContent('Page not found 404');
 });
 
+const ProblematicComponent = ({ shouldThrow }: { shouldThrow: boolean }) => {
+  if (shouldThrow) {
+    throw new Error('Test error');
+  }
+  return <div>No error</div>;
+};
+
 describe('ErrorBoundary', () => {
-  const ProblematicComponent = () => {
-    return '';
-  };
+  const fallbackUI = 'Something went wrong!';
 
-  it('should display the fallback UI when a child throws an error', () => {
-    const { container } = render(
-      <ErrorBoundary fallback={<p>ErrorBoundary: Something went wrong.</p>}>
-        <ProblematicComponent />
-      </ErrorBoundary>,
-    );
-
-    expect(container).toHaveTextContent('');
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
-  it('should display children when no error is thrown', () => {
-    const SafeComponent = () => <div>Safe Component</div>;
+  afterAll(() => {
+    (console.error as jest.Mock).mockRestore();
+    (console.warn as jest.Mock).mockRestore();
+  });
 
-    const { getByText } = render(
-      <ErrorBoundary fallback={<p>ErrorBoundary: Something went wrong.</p>}>
-        <SafeComponent />
+  it('render fallback when an error is caught', () => {
+    render(
+      <ErrorBoundary fallback={fallbackUI}>
+        <ProblematicComponent shouldThrow={true} />
       </ErrorBoundary>,
     );
 
-    expect(getByText('Safe Component')).toBeInTheDocument();
+    expect(screen.getByText(fallbackUI)).toBeInTheDocument();
+  });
+
+  it('render children if no error is caught', () => {
+    render(
+      <ErrorBoundary fallback={fallbackUI}>
+        <ProblematicComponent shouldThrow={false} />
+      </ErrorBoundary>,
+    );
+
+    expect(screen.getByText('No error')).toBeInTheDocument();
   });
 });
 
