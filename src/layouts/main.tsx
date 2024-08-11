@@ -1,3 +1,5 @@
+'use client';
+
 import ThemeSelector from '../components/ThemeSelector';
 import { useTheme } from '../ThemeContext';
 

@@ -4,8 +4,10 @@ import PaginationResults from '../../components/Pagination';
 import { queryParams, SearchResultItem } from '../../types/SearchTypes';
 import ResultActions from '../ResultActions';
 import DetailPage from '../Details';
+import { ItemDetailFullResponse } from 'src/types/ApiTypes';
 
 interface SearchProps {
+  initialDetailData: ItemDetailFullResponse | undefined;
   handleSearchText: (text: string, page: number) => void;
   loading: boolean;
   results: SearchResultItem[];
@@ -14,6 +16,7 @@ interface SearchProps {
 }
 
 const Search = ({
+  initialDetailData,
   handleSearchText,
   loading,
   results,
@@ -44,7 +47,12 @@ const Search = ({
       </div>
 
       <div className="search-page__right">
-        {details ? <DetailPage queryParams={queryParams} /> : null}
+        {details ? (
+          <DetailPage
+            queryParams={queryParams}
+            initialDetailData={initialDetailData}
+          />
+        ) : null}
       </div>
     </div>
   );

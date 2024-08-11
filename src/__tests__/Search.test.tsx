@@ -6,11 +6,11 @@ import '@testing-library/jest-dom';
 import { fireEvent, render } from '@testing-library/react';
 import SearchTop from '../components/Top';
 import Search from '../components/Search';
-import Page from '../pages/search';
 import { Provider } from 'react-redux';
 import { createMockStore } from '../store/mockStore';
 import { useItemDetailQuery, useSearchItemsQuery } from '../services/api';
 import { useRouter, usePathname } from 'next/navigation';
+import SearchClientPage from '../components/Search/SearchClient';
 
 beforeEach(() => {
   localStorage.clear();
@@ -26,6 +26,7 @@ jest.mock('next/navigation', () => ({
 jest.mock('../services/api', () => ({
   useItemDetailQuery: jest.fn(),
   useSearchItemsQuery: jest.fn(),
+  itemApi: jest.fn(),
 }));
 
 test('Search component clicking the Search button saves the entered value to the local storage', () => {
@@ -65,6 +66,17 @@ describe('Search Component', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <Search
+          initialDetailData={{
+            animal: {
+              uid: 'ANMA0000264633',
+              name: 'Abalone',
+              earthAnimal: true,
+              earthInsect: false,
+              avian: false,
+              canine: false,
+              feline: false,
+            },
+          }}
           queryParams={{
             page: 1,
             perPage: 10,
@@ -119,7 +131,47 @@ describe('Search Page Component', () => {
 
     const { getByTestId } = render(
       <Provider store={store}>
-        <Page page={1} perPage={10} keywords={'text query'} details={''} />
+        <SearchClientPage
+          initialData={{
+            page: {
+              pageNumber: 0,
+              pageSize: 50,
+              numberOfElements: 50,
+              totalElements: 563,
+              totalPages: 12,
+              firstPage: true,
+              lastPage: false,
+            },
+            animals: [
+              {
+                uid: 'ANMA0000032315',
+                name: "'Owon",
+                earthAnimal: 'false',
+                queryParams: {
+                  page: 1,
+                  perPage: 1,
+                  keywords: '',
+                },
+              },
+            ],
+            sort: {},
+          }}
+          initialDetailData={{
+            animal: {
+              uid: 'ANMA0000264633',
+              name: 'Abalone',
+              earthAnimal: true,
+              earthInsect: false,
+              avian: false,
+              canine: false,
+              feline: false,
+            },
+          }}
+          details={'ANMA0000264633'}
+          keywords={'text query'}
+          page={1}
+          perPage={10}
+        />
       </Provider>,
     );
 

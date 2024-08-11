@@ -86,6 +86,17 @@ describe('CardOpenDetail', () => {
     const { container } = render(
       <Provider store={store}>
         <Search
+          initialDetailData={{
+            animal: {
+              uid: 'ANMA0000264633',
+              name: 'Abalone',
+              earthAnimal: true,
+              earthInsect: false,
+              avian: false,
+              canine: false,
+              feline: false,
+            },
+          }}
           queryParams={{
             page: 1,
             perPage: 10,
@@ -138,6 +149,17 @@ describe('CardOpenDetailWithAPI', () => {
     const { container } = render(
       <Provider store={store}>
         <Search
+          initialDetailData={{
+            animal: {
+              uid: 'ANMA0000264633',
+              name: 'Abalone',
+              earthAnimal: true,
+              earthInsect: false,
+              avian: false,
+              canine: false,
+              feline: false,
+            },
+          }}
           queryParams={{
             page: 1,
             perPage: 10,

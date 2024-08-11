@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { useItemDetailQuery } from '../../services/api';
 import { DetailResult, queryParams } from '../../types/SearchTypes';
 import { usePathname, useRouter } from 'next/navigation';
+import { ItemDetailFullResponse } from 'src/types/ApiTypes';
 
 const names = {
   uid: 'UID',
@@ -13,7 +14,13 @@ const names = {
   feline: 'Feline',
 };
 
-const DetailPage = ({ queryParams }: { queryParams: queryParams }) => {
+const DetailPage = ({
+  queryParams,
+  initialDetailData,
+}: {
+  queryParams: queryParams;
+  initialDetailData: ItemDetailFullResponse | undefined;
+}) => {
   const { replace } = useRouter();
   const pathname = usePathname();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -25,9 +32,18 @@ const DetailPage = ({ queryParams }: { queryParams: queryParams }) => {
     );
   };
 
-  const { data, error, isLoading } = useItemDetailQuery({
-    uid: details || '',
-  });
+  const { data, error, isLoading } = useItemDetailQuery(
+    {
+      uid: details || '',
+    },
+    {
+      skip: initialDetailData !== undefined,
+      selectFromResult: (result) => ({
+        ...result,
+        data: initialDetailData || result.data,
+      }),
+    },
+  );
 
   return (
     <>

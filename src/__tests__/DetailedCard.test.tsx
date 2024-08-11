@@ -61,6 +61,17 @@ describe('DetailedCard', () => {
             keywords: '',
             details: 'ANMA0000264633',
           }}
+          initialDetailData={{
+            animal: {
+              uid: 'ANMA0000264633',
+              name: 'Abalone',
+              earthAnimal: true,
+              earthInsect: false,
+              avian: false,
+              canine: false,
+              feline: false,
+            },
+          }}
         />
       </Provider>,
     );
@@ -101,6 +112,17 @@ describe('DetailedCard', () => {
             keywords: '',
             details: 'ANMA0000264633',
           }}
+          initialDetailData={{
+            animal: {
+              uid: 'ANMA0000264633',
+              name: 'Abalone',
+              earthAnimal: true,
+              earthInsect: false,
+              avian: false,
+              canine: false,
+              feline: false,
+            },
+          }}
         />
       </Provider>,
     );
@@ -127,6 +149,17 @@ describe('DetailedCard', () => {
             perPage: 10,
             keywords: '',
             details: 'ANMA0000264633',
+          }}
+          initialDetailData={{
+            animal: {
+              uid: 'ANMA0000264633',
+              name: 'Abalone',
+              earthAnimal: true,
+              earthInsect: false,
+              avian: false,
+              canine: false,
+              feline: false,
+            },
           }}
         />
       </Provider>,

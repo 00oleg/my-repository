@@ -117,10 +117,6 @@ input[type='text'] {
   margin: 0 auto;
 }
 
-body > div {
-  height: 100%;
-}
-
 .app {
   --bg-color: black;
   --txt-color: white;
