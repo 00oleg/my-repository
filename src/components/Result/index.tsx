@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import Card from '../Card';
-import { SearchResultItem } from '../../types/SearchTypes';
+import { queryParams, SearchResultItem } from '../../types/SearchTypes';
 
 interface SearchResultsProps {
   results: SearchResultItem[];
   loading: boolean;
-  pageNumber: number;
+  queryParams: queryParams;
 }
 
 const SearchResults = ({
   loading,
   results,
-  pageNumber,
+  queryParams,
 }: SearchResultsProps) => {
   const [hasError, setHasError] = useState(false);
 
@@ -42,7 +42,7 @@ const SearchResults = ({
       {results.length ? (
         <div className="card-list">
           {results.map((result, index) => (
-            <Card key={index} pageNumber={pageNumber} {...result} />
+            <Card key={index} {...result} queryParams={queryParams} />
           ))}
         </div>
       ) : (

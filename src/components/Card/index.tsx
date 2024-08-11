@@ -2,18 +2,12 @@ import { RootState } from '../../store/store';
 import { toggleItem } from '../../store/itemReducer';
 import { SearchResultItem } from '../../types/SearchTypes';
 import Link from 'next/link';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { useSearchParams } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
 
-const Card = ({ uid, name, earthAnimal }: SearchResultItem) => {
-  const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get('page')) || 1;
-  const currentPerPage = Number(searchParams.get('per_page')) || 10;
-  const currentSearchTerm = String(searchParams.get('searchTerm')) || '';
-  const itemsFromStore = useAppSelector(
-    (state: RootState) => state.items.values,
-  );
-  const dispatch = useAppDispatch();
+const Card = ({ queryParams, uid, name, earthAnimal }: SearchResultItem) => {
+  const { page, perPage, keywords } = queryParams;
+  const itemsFromStore = useSelector((state: RootState) => state.items.values);
+  const dispatch = useDispatch();
 
   const handleCheckboxChange = (value: SearchResultItem) => {
     dispatch(toggleItem(value));
@@ -24,12 +18,14 @@ const Card = ({ uid, name, earthAnimal }: SearchResultItem) => {
       <input
         type="checkbox"
         value={uid}
-        onChange={() => handleCheckboxChange({ uid, name, earthAnimal })}
+        onChange={() =>
+          handleCheckboxChange({ uid, name, earthAnimal, queryParams })
+        }
         checked={!!itemsFromStore[uid]}
       />
       <Link
         className="card-list__item-link"
-        href={`/search?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}&details=${uid}`}
+        href={`/search?searchTerm=${keywords}&page=${page}&per_page=${perPage}&details=${uid}`}
         data-testid="card-list__item-link"
       >
         <strong>{name}</strong> -

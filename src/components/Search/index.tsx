@@ -1,48 +1,42 @@
 import SearchTop from '../../components/Top';
 import SearchResults from '../../components/Result';
 import PaginationResults from '../../components/Pagination';
-import { SearchResultItem } from '../../types/SearchTypes';
+import { queryParams, SearchResultItem } from '../../types/SearchTypes';
 import ResultActions from '../ResultActions';
-import { useSearchParams } from 'next/navigation';
 import DetailPage from '../Details';
 
 interface SearchProps {
-  searchText: string;
   handleSearchText: (text: string, page: number) => void;
   loading: boolean;
   results: SearchResultItem[];
-  pageNumber: number;
   totalPages: number;
-  perPage: number;
+  queryParams: queryParams;
 }
 
 const Search = ({
-  searchText = '',
   handleSearchText,
   loading,
   results,
-  pageNumber,
   totalPages,
-  perPage,
+  queryParams,
 }: SearchProps) => {
-  const searchParams = useSearchParams();
-  const currentDetails = searchParams.get('details');
+  const { page, perPage, keywords, details } = queryParams;
 
   return (
     <div className="search-page">
       <div className="search-page__left">
-        <SearchTop searchText={searchText} onSearch={handleSearchText} />
+        <SearchTop searchText={keywords} onSearch={handleSearchText} />
         <SearchResults
           loading={loading}
           results={results}
-          pageNumber={pageNumber}
+          queryParams={queryParams}
         />
         {loading || !results.length ? null : (
           <PaginationResults
-            pageNumber={pageNumber}
+            pageNumber={page}
             totalPages={totalPages}
             perPage={perPage}
-            searchText={searchText}
+            searchText={keywords}
           />
         )}
 
@@ -50,7 +44,7 @@ const Search = ({
       </div>
 
       <div className="search-page__right">
-        {currentDetails ? <DetailPage /> : null}
+        {details ? <DetailPage queryParams={queryParams} /> : null}
       </div>
     </div>
   );

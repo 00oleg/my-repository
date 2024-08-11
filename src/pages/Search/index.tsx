@@ -5,9 +5,9 @@ import itemApi, {
   searchItems,
   useSearchItemsQuery,
 } from '../../services/api';
-import { useRouter } from 'next/router';
+import { usePathname, useRouter } from 'next/navigation';
 import { InferGetServerSidePropsType } from 'next';
-import { wrapper } from 'src/store/store';
+import { wrapper } from '../../store/store';
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>
@@ -17,7 +17,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       const currentSearchTerm = searchTerm ? String(searchTerm) : '';
       const currentPage = Number(page) || 1;
       const currentPerPage = Number(per_page) || 10;
-      const currentDetails = String(details) || '';
+      const currentDetails = details ? String(details) : '';
 
       await store.dispatch(
         searchItems.initiate({
@@ -39,10 +39,10 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
       return {
         props: {
-          searchTerm: currentSearchTerm,
-          perPage: currentPerPage,
           page: currentPage,
-          initialState: store.getState(),
+          perPage: currentPerPage,
+          keywords: currentSearchTerm,
+          details: currentDetails,
         },
       };
     },
@@ -51,10 +51,12 @@ export const getServerSideProps = wrapper.getServerSideProps(
 export default function Page({
   page,
   perPage,
-  searchTerm,
+  keywords,
+  details,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const currentSearchTerm = searchTerm ? String(searchTerm) : '';
-  const router = useRouter();
+  const currentSearchTerm = keywords ? String(keywords) : '';
+  const { replace } = useRouter();
+  const pathname = usePathname();
   const [searchText, setSearchText] = useSearchQuery(
     'searchText',
     currentSearchTerm,
@@ -62,14 +64,7 @@ export default function Page({
 
   const handleSearchText = (param: string) => {
     setSearchText(param);
-    router.push({
-      pathname: '/search',
-      query: {
-        searchTerm: param,
-        page: 1,
-        perPage: perPage.toString(),
-      },
-    });
+    replace(`${pathname}/?searchTerm=${param}&page=1&per_page=${perPage}`);
   };
 
   const { data, error, isLoading } = useSearchItemsQuery({
@@ -90,9 +85,14 @@ export default function Page({
           handleSearchText,
           loading: isLoading,
           results: data?.animals || [],
-          pageNumber: data?.page.pageNumber || 0,
-          totalPages: data?.page.totalPages || 0,
+          totalPages: data?.page?.totalPages || 0,
           perPage,
+        }}
+        queryParams={{
+          page: page,
+          perPage: perPage,
+          keywords: keywords,
+          details: details,
         }}
       />
     </>

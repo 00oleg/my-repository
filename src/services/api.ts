@@ -30,11 +30,7 @@ const itemApi = createApi({
   }),
 });
 
-export const {
-  useSearchItemsQuery,
-  useItemDetailQuery,
-  // util: { getRunningQueriesThunk },
-} = itemApi;
+export const { useSearchItemsQuery, useItemDetailQuery } = itemApi;
 export default itemApi;
 
 export const { searchItems, itemDetail } = itemApi.endpoints;

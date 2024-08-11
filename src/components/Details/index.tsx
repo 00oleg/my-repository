@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useItemDetailQuery } from '../../services/api';
-import { DetailResult } from '../../types/SearchTypes';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { DetailResult, queryParams } from '../../types/SearchTypes';
+import { usePathname, useRouter } from 'next/navigation';
 
 const names = {
   uid: 'UID',
@@ -13,23 +13,20 @@ const names = {
   feline: 'Feline',
 };
 
-const DetailPage = () => {
-  const searchParams = useSearchParams();
+const DetailPage = ({ queryParams }: { queryParams: queryParams }) => {
   const { replace } = useRouter();
   const pathname = usePathname();
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const currentSearchTerm = String(searchParams.get('searchTerm')) || '';
-  const currentPage = Number(searchParams.get('page'));
-  const currentPerPage = Number(searchParams.get('per_page'));
+  const { page, perPage, keywords, details } = queryParams;
 
   const onDismiss = () => {
     replace(
-      `${pathname}/?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}`,
+      `${pathname}/?searchTerm=${keywords}&page=${page}&per_page=${perPage}`,
     );
   };
 
   const { data, error, isLoading } = useItemDetailQuery({
-    uid: searchParams.get('details') || '',
+    uid: details || '',
   });
 
   return (

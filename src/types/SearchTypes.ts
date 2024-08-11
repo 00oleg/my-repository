@@ -3,6 +3,7 @@ export interface SearchResultItem {
   name: string;
   earthAnimal: string;
   pageNumber?: number;
+  queryParams: queryParams;
 }
 
 export interface DetailResult {
@@ -13,4 +14,11 @@ export interface DetailResult {
   avian: boolean;
   canine: boolean;
   feline: boolean;
+}
+
+export interface queryParams {
+  page: number;
+  perPage: number;
+  keywords: string;
+  details?: string;
 }

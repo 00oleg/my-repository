@@ -28,7 +28,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "./dist/types/**/*.ts"
-, "src/__tests__/Card.test.tsx_", "src/__tests__/Pagination.test.tsx_", "src/__tests__/DetailedCard.test.tsx_"  ],
+  ],
   "exclude": ["node_modules"]
 }

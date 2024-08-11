@@ -1,41 +1,33 @@
 import { RootState } from '../../store/store';
 import { removeItems } from '../../store/itemReducer';
 import { SearchResultItem } from '../../types/SearchTypes';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { useDispatch, useSelector } from 'react-redux';
 
-const convertToCSV = (items: Record<string, SearchResultItem>) => {
-  const rows = Object.keys(items).map((key) => {
-    const currentItem = items[key];
-    return [currentItem.uid, currentItem.name, currentItem.earthAnimal];
-  });
+const createFile = (checkedItems: Record<string, SearchResultItem>) => {
+  const convertToCSV = (items: Record<string, SearchResultItem>) => {
+    const header = ['UUID', 'Name', 'Earth Animal'];
+    const rows = Object.keys(items).map((key) => {
+      const currentItem = items[key];
+      return [currentItem.uid, currentItem.name, currentItem.earthAnimal];
+    });
 
-  return [['UUID', 'Name', 'Earth Animal'], ...rows]
-    .map((e) => e.join(','))
-    .join('\n');
+    const csvContent = [header, ...rows].map((e) => e.join(',')).join('\n');
+    return csvContent;
+  };
+
+  const csvContent = convertToCSV(checkedItems);
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  return URL ? URL.createObjectURL(blob) : '';
 };
 
 const ResultActions = () => {
-  const dispatch = useAppDispatch();
-  const checkedItems = useAppSelector((state: RootState) => state.items.values);
+  const dispatch = useDispatch();
+  const checkedItems = useSelector((state: RootState) => state.items.values);
   const checkedItemsKeys = Object.keys(checkedItems);
   const checkedItemsTotal = checkedItemsKeys.length;
 
   const handleUnselect = () => {
     dispatch(removeItems());
-  };
-
-  const handleDownload = () => {
-    const csvContent = convertToCSV(checkedItems);
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', checkedItemsTotal + '_animals.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   if (!checkedItemsTotal) {
@@ -48,9 +40,13 @@ const ResultActions = () => {
       <button className="btn-success" onClick={handleUnselect}>
         Unselect all
       </button>
-      <button className="btn-success" onClick={handleDownload}>
+      <a
+        className="btn btn-success"
+        href={createFile(checkedItems)}
+        download={`${checkedItemsTotal}_animals.csv`}
+      >
         Download
-      </button>
+      </a>
     </div>
   );
 };

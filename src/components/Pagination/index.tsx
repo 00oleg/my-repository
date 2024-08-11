@@ -36,7 +36,7 @@ const PaginationResults = ({
 
       <div className="pagination-result__list">
         <div className="pagination-result__title">Per Page:</div>
-        {[1, 2, 3].map((el: number) => {
+        {[0, 1, 2].map((el: number) => {
           const per_page = (el + 1) * 10;
 
           return (
