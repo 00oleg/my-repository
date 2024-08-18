@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { addUser } from '../../store/usersSlice';
 import { useNavigate } from 'react-router-dom';
+import PasswordStrength from '../../components/PasswordStrength';
+import { useEffect } from 'react';
 
 const FormControlledPage = () => {
   const dispatch = useDispatch();
@@ -18,12 +20,21 @@ const FormControlledPage = () => {
   const {
     control,
     handleSubmit,
+    trigger,
+    watch,
     formState: { errors, isValid },
   } = useForm<UserFormValues>({
     resolver: useYupValidationResolver(validationSchema),
-    mode: 'onChange',
-    defaultValues: {},
+    mode: 'all',
   });
+
+  const passwordStrength = watch('password');
+
+  useEffect(() => {
+    if (passwordStrength) {
+      trigger('passwordConfirm');
+    }
+  }, [passwordStrength]);
 
   const onSubmit = (data: UserFormValues) => {
     const picture = data.picture[0];
@@ -79,6 +90,7 @@ const FormControlledPage = () => {
             render={({ field }) => (
               <input
                 type="number"
+                min={0}
                 id="input-age"
                 {...field}
                 value={field.value || ''}
@@ -118,15 +130,18 @@ const FormControlledPage = () => {
           <Controller
             name="password"
             control={control}
-            render={({ field }) => (
-              <input
-                type="password"
-                id="input-password"
-                {...field}
-                value={field.value || ''}
-              />
-            )}
+            render={({ field }) => {
+              return (
+                <input
+                  type="password"
+                  id="input-password"
+                  {...field}
+                  value={field.value || ''}
+                />
+              );
+            }}
           />
+          <PasswordStrength password={passwordStrength} />
           {errors.password && (
             <p className="input-error">{errors.password.message}</p>
           )}
@@ -235,7 +250,7 @@ const FormControlledPage = () => {
         </div>
 
         <button
-          className="btn-success btn-full"
+          className="btn-success btn-full mt-10"
           type="submit"
           disabled={!isValid}
         >

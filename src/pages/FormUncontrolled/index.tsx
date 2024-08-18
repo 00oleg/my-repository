@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import * as Yup from 'yup';
 import { validationSchema } from '../../utils/validationSchema';
+import PasswordStrength from '../../components/PasswordStrength';
 
 const FormUncontrolledPage = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,8 @@ const FormUncontrolledPage = () => {
     picture: useRef<HTMLInputElement>(null),
     country: useRef<HTMLInputElement>(null),
   };
+
+  const passwordStrength = refs.password.current?.value || '';
 
   const handleErrors = (errorParams: object) => {
     setErrors({ ...errorParams });
@@ -98,7 +101,7 @@ const FormUncontrolledPage = () => {
 
         <div className="form-control">
           <label htmlFor="input-age">Age</label>
-          <input id="input-age" type="number" ref={refs.age} />
+          <input id="input-age" type="number" min={0} ref={refs.age} />
           {errors.age && <p className="input-error">{errors.age}</p>}
         </div>
 
@@ -117,6 +120,7 @@ const FormUncontrolledPage = () => {
             </span>
           </label>
           <input id="input-password" type="password" ref={refs.password} />
+          <PasswordStrength password={passwordStrength} />
           {errors.password && <p className="input-error">{errors.password}</p>}
         </div>
 
@@ -171,7 +175,7 @@ const FormUncontrolledPage = () => {
           {errors.country && <p className="input-error">{errors.country}</p>}
         </div>
 
-        <button className="btn-success btn-full" type="submit">
+        <button className="btn-success btn-full mt-10" type="submit">
           Submit
         </button>
       </form>

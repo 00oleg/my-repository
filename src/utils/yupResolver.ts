@@ -23,7 +23,6 @@ export const useYupValidationResolver = <T extends object>(
       } catch (error) {
         const errors = (error as Yup.ValidationError).inner.reduce(
           (allErrors, currentError) => {
-            // Ensure path is a string
             const path = currentError.path as string | undefined;
             if (path) {
               return {

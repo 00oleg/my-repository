@@ -4,8 +4,8 @@ const Navs = () => {
   return (
     <div className="navs">
       <Link to={'/'}>Home</Link>
-      <Link to={'/form-uncontrolled'}>Form uncontrolled</Link>
-      <Link to={'/form-controlled'}>Form controlled</Link>
+      <Link to={'/form-uncontrolled'}>Uncontrolled Form</Link>
+      <Link to={'/form-controlled'}>Controlled Form</Link>
     </div>
   );
 };
