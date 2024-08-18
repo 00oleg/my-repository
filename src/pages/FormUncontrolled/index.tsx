@@ -89,6 +89,7 @@ const FormUncontrolledPage = () => {
     <>
       <Navs />
       <form onSubmit={handleSubmit} className="form-block" autoComplete="off">
+        <h2>Uncontrolled Form</h2>
         <div className="form-control">
           <label htmlFor="input-name">Name</label>
           <input id="input-name" type="text" ref={refs.name} />

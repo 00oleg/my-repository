@@ -3,7 +3,8 @@ import countriesAll from './countriesAll';
 
 export const validationSchema = Yup.object().shape({
   name: Yup.string()
-    .matches(/^[A-Z]/, 'Name must start with an uppercase letter')
+    .matches(/^[A-Z]/, 'Name must start with an English uppercase letter')
+    .matches(/^[A-Za-z ]+$/, 'Name can only contain English characters')
     .min(1, 'Name must contain min 1 digits')
     .max(50, 'Name must contain max 50 digits')
     .required('Name is required'),
@@ -15,14 +16,22 @@ export const validationSchema = Yup.object().shape({
     .required('Age is required'),
   email: Yup.string()
     .email('Invalid email format')
+    .matches(
+      /^[A-Za-z0-9\s!@#$%^&*(),.?":{}|<>'_+-=]+$/,
+      'Email can only contain English characters',
+    )
     .required('Email is required'),
   password: Yup.string()
     .matches(/[A-Z]/, 'Password must contain at least 1 uppercase letter')
     .matches(/[a-z]/, 'Password must contain at least 1 lowercase letter')
     .matches(/\d/, 'Password must contain at least 1 number')
     .matches(
-      /[!@#$%^&*(),.?":{}|<>]/,
+      /[!@#$%^&*(),.?":{}|<>'_+-=]/,
       'Password must contain at least 1 special character',
+    )
+    .matches(
+      /^[A-Za-z0-9\s!@#$%^&*(),.?":{}|<>'_+-=]+$/,
+      'Password can only contain English characters',
     )
     .required('Password is required'),
   passwordConfirm: Yup.string()

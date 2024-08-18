@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 
 const Navs = () => {
   return (
-    <div>
+    <div className="navs">
       <Link to={'/'}>Home</Link>
-      <Link to={'/form-uncontrolled'}>form uncontrolled</Link>
-      <Link to={'/form-controlled'}>form controlled</Link>
+      <Link to={'/form-uncontrolled'}>Form uncontrolled</Link>
+      <Link to={'/form-controlled'}>Form controlled</Link>
     </div>
   );
 };
